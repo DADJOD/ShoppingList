@@ -1,8 +1,8 @@
 package com.example.shoppinglist.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         viewModule = ViewModelProvider(this)[MainViewModule::class.java]
         viewModule.shopList.observe(this) {
-            shopListAdapter.shopList = it
+            shopListAdapter.submitList(it)
         }
     }
 
@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         setupLongClickListener()
         setupClickListener()
-        setupSwipListener(rvShopList)
+        setupSwipeListener(rvShopList)
     }
 
-    private fun setupSwipListener(rvShopList: RecyclerView?) {
+    private fun setupSwipeListener(rvShopList: RecyclerView?) {
         val callback = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = shopListAdapter.shopList[viewHolder.adapterPosition]
+                val item = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModule.deleteShopItem(item)
             }
         }
